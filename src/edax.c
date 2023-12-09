@@ -42,6 +42,7 @@
  *   -hint [n]            ask edax to search the first bestmoves.
  *   -m|mode [n]          ask edax to automatically play (default = 3).
  *   -a|analyze [n]       retro-analyze the game.
+ *   -d|display           display the game record.
  *   -?|help              show this message.
  *   -v|version           display the version number.
  *
@@ -209,6 +210,7 @@ void help_commands(void)
 	printf("  hint [n]            ask edax to search the first bestmoves.\n");
 	printf("  m|mode [n]          ask edax to automatically play (default = 3).\n");
 	printf("  a|analyze [n]       retro-analyze the game.\n");
+	printf("  d|display           display the game record.\n");
 	printf("  ?|help              show this message.\n");
 	printf("  v|version           display the version number.\n");
 }
@@ -403,6 +405,10 @@ void ui_loop_edax(UI *ui)
 			// analyze a game
 			} else if (strcmp(cmd, "a") == 0 || strcmp(cmd, "analyze") == 0 || strcmp(cmd, "analyse") == 0) {
 				play_analyze(play, string_to_int(param, play->n_game));
+
+			// display a game record
+			} else if (strcmp(cmd, "d") == 0 || strcmp(cmd, "display") == 0) {
+				play_display(play);
 
 			// set a new initial position
 			} else if (strcmp(cmd, "setboard") == 0) {

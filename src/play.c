@@ -1209,3 +1209,26 @@ const char* play_show_opening_name(Play *play, const char *(*opening_get_name)(c
 	return last;
 }
 
+/**
+ * @brief Display the game record.
+ *
+ * @param play Play.
+ */
+void play_display(Play *play)
+{
+	int i, org_player;
+	char s[4];
+	Move *move;
+
+	org_player = play->player;
+	play->player = play->initial_player;
+	for (i = 0; i < play->i_game; i++) {
+		move = play->game + i;
+		if (move->x != PASS) {
+				fprintf(stdout, "%s", move_to_string(move->x, play->player, s));
+		}
+		play->player ^= 1;
+	}
+	putc('\n', stdout);
+	play->player = org_player;
+}

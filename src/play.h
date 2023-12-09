@@ -87,6 +87,7 @@ bool play_move(Play*, int);
 bool play_user_move(Play*, const char*);
 Move *play_get_last_move(Play*);
 void play_analyze(Play*, int);
+void play_display(Play*);
 void play_book_analyze(Play*, int);
 void play_learn(Play*);
 void play_store(Play*);
