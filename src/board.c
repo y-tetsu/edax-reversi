@@ -51,6 +51,7 @@
 	#include "count_last_flip_kindergarten.c"
 #endif
 
+unsigned long long H = 0xFFFFC3C3C3C3FFFFULL;  /* 4x4 square */
 
 /** edge stability global data */
 static unsigned char edge_stability[256][256];
@@ -156,6 +157,7 @@ int board_set(Board *board, const char *string)
 	int i;
 	const char *s = string;
 
+	H = 0;  /* clear hole */
 	board->player = board->opponent = 0;
 	for (i = A1; i <= H8; ++i) {
 		if (*s == '\0') break;
@@ -171,6 +173,9 @@ int board_set(Board *board, const char *string)
 			break;
 		case '-':
 		case '.':
+			break;
+		case ' ':
+			H |= x_to_bit(i);  /* set hole bit */
 			break;
 		default:
 			i--;
@@ -734,7 +739,7 @@ unsigned long long get_moves(const unsigned long long P, const unsigned long lon
 		| get_some_moves(P, O, 8)   // vertical
 		| get_some_moves(P, mask, 7)   // diagonals
 		| get_some_moves(P, mask, 9))
-		& ~(P|O); // mask with empties
+		& ~(P|O|H); // mask with empties
 
 #endif
 }
@@ -768,7 +773,7 @@ unsigned long long get_moves_6x6(const unsigned long long P, const unsigned long
  */
 bool can_move(const unsigned long long P, const unsigned long long O)
 {
-	const unsigned long long E = ~(P|O); // empties
+	const unsigned long long E = ~(P|O|H); // empties
 
 	return (get_some_moves(P, O & 0x007E7E7E7E7E7E00ull, 7) & E)  // diagonals
 		|| (get_some_moves(P, O & 0x007E7E7E7E7E7E00ull, 9) & E)
@@ -839,7 +844,7 @@ static unsigned long long get_potential_moves(const unsigned long long P, const 
 		| get_some_potential_moves(O & 0x00FFFFFFFFFFFF00ull, 8)   // vertical
 		| get_some_potential_moves(O & 0x007E7E7E7E7E7E00ull, 7)   // diagonals
 		| get_some_potential_moves(O & 0x007E7E7E7E7E7E00ull, 9))
-		& ~(P|O); // mask with empties
+		& ~(P|O|H); // mask with empties
 }
 
 /**
@@ -868,7 +873,7 @@ int get_potential_mobility(const unsigned long long P, const unsigned long long 
 static int find_edge_stable(const int old_P, const int old_O, int stable)
 {
 	register int P, O, x, y;
-	const int E = ~(old_P | old_O); // empties
+	const int E = ~(old_P | old_O | H); // empties
 
 	stable &= old_P; // mask stable squares with remaining player squares.
 	if (!stable || E == 0) return stable;

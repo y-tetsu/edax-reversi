@@ -69,5 +69,7 @@ int get_stability(const unsigned long long, const unsigned long long);
 int get_edge_stability(const unsigned long long, const unsigned long long);
 int get_corner_stability(const unsigned long long);
 
+extern unsigned long long H;
+
 #endif
 

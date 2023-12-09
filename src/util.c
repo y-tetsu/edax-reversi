@@ -632,6 +632,11 @@ char* parse_move(const char *string, const Board *board, Move *move)
 	if (string) {
 		char *word = parse_skip_spaces(string);
 		int x = string_to_coordinate(word);
+		if (A1 <= x && x <= H8 && ((1ULL << (63 - x)) & H)) {
+			move->x = NOMOVE;
+			move->flipped = 0;
+			return (char*) string;  /* ignore if player move on hole */
+		}
 		move->x = x;
 		move->flipped = flip[x](board->player, board->opponent);
 		if ((x == PASS && board_is_pass(board)) || (move->flipped && !board_is_occupied(board, x))) return word + 2;

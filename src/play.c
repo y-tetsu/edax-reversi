@@ -983,7 +983,7 @@ void play_print(Play *play, FILE *f)
 {
 	int i, j, x, discs[2], mobility[2], square;
 	char history[64];
-	const char *color = "?*O-." + 1;
+	const char *color = "?*O-. " + 1;
 	const char big_color[3][4] = {"|##", "|()", "|  "};
 	const char player[2][6] = {"Black", "White"};
 	Board *board = play->board;
@@ -1012,6 +1012,7 @@ void play_print(Play *play, FILE *f)
 			if (p == BLACK) square = 2 - ((board->opponent >> x) & 1) - 2 * ((board->player >> x) & 1);
 			else square = 2 - ((board->player >> x) & 1) - 2 * ((board->opponent >> x) & 1);
 			if (square == EMPTY && (moves & x_to_bit(x))) ++square;
+			if (x_to_bit(x) & H) square = 5;  /* print white-space if hole */
 			fputc(color[square], f);
 			fputc(' ', f);
 		}
@@ -1026,7 +1027,7 @@ void play_print(Play *play, FILE *f)
 			break;
 		case 3:
 			if (mobility[BLACK] + mobility[WHITE] == 0) fprintf(f,"       Game over        ");
-			else fprintf(f,"  ply %2d (%2d empties)   ", play->i_game + 1, board_count_empties(board));
+			else fprintf(f,"  ply %2d (%2d empties)   ", play->i_game + 1, board_count_empties(board) - bit_count(H));
 			break;
 		case 4:
 			if (mobility[BLACK] + mobility[WHITE] == 0) {

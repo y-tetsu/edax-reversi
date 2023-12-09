@@ -35,7 +35,7 @@ Options options = {
 	false, // debug cassio
 	true, // transgress cassio
 
-	21, // max level
+	60, // max level
 	TIME_MAX, // infinite time
 	EDAX_FIXED_LEVEL, // play-type
 	true, // can ponder
@@ -55,7 +55,7 @@ Options options = {
 	NULL, // evaluation function's weights file.
 
 	NULL, // book file
-	true,            // book usage allowed
+	false,           // book usage not allowed
 	0,               // book randomness
 
 	NULL, // ggs host name
